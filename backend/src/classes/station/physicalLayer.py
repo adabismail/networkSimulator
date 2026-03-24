@@ -7,6 +7,7 @@ class senderSidePhysical:
         self.k=0
     
     def transmitToMedium(self,bits_string,medium):
+        self.k = 0
         if self.device.port!=None:
             while(self.k<=15):
                 while medium.is_busy():
@@ -19,14 +20,15 @@ class senderSidePhysical:
                         flag=False
                         break
                     else:
-                        medium.transmit(self.device.port,bit)
-                        time.sleep(1)
+                        medium.transmit(self.device.port, bit=bit)
+                        time.sleep(0.001)
                 if(flag):
-                    medium.transmit(self.device.port,True)
+                    medium.transmit(self.device.port, completion=True)
+                    medium.transmitters.remove(self.device)
                     return
                 else:
                     # Collision detected
-                    medium.transmit(self.device.port,not(flag))
+                    medium.transmit(self.device.port,flag=False)
                     medium.transmitters.remove(self.device)
                     # Send jamming signal to the medium.
                     self.k=self.k+1
@@ -49,4 +51,4 @@ class recieverSidePhysical:
         bit_string="".join(self.tray)
         self.tray.clear()
         # Pass bits to reciever datalink layer.
-        self.device.recieverSideDatalink.receive(bit_string)
+        self.device.recieverSideDataLink.recieve(bit_string)
