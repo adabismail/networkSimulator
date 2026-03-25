@@ -22,6 +22,7 @@ class Device:
         self.name = name
         self.macAddress = giveMacAddress(Device.companyIdentifier)
         self.port = None   # assigned when connected to a medium
+        self.medium = None
 
         # Physical layer (both directions)
         self.senderSidePhysical   = senderSidePhysical(self)
